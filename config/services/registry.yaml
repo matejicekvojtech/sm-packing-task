@@ -1,0 +1,5 @@
+services:
+    App\Registry\MinimalPackagingProviderRegistry:
+        class: App\Registry\ServiceRegistry
+        arguments:
+            $services: !tagged_iterator { tag: app.provider.minimal_packaging, default_priority_method: getPriority }

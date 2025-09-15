@@ -1,0 +1,29 @@
+services:
+    App\Factory\:
+        resource: '../../src/Factory'
+        autowire: true
+
+    Doctrine\ORM\EntityManagerInterface:
+        factory: [ 'App\Factory\EntityManagerFactory', 'create' ]
+        arguments:
+            $connection:
+                driver: '%db.driver%'
+                host: '%db.host%'
+                user: '%db.user%'
+                password: '%db.password%'
+                dbname: '%db.name%'
+        public: true
+
+    App\Client\BinPackingGuzzleHttpClient:
+        factory: ['App\Factory\BinPackingClientFactory', 'create']
+        arguments:
+            $baseUri: '%binpacking.url%'
+
+    Symfony\Component\Serializer\SerializerInterface:
+        factory: ['App\Factory\SerializerFactory', 'create']
+
+    Symfony\Component\Validator\Validator\ValidatorInterface:
+        factory: ['App\Factory\ValidatorFactory', 'create']
+
+    Symfony\Contracts\Cache\CacheInterface:
+        factory: ['App\Factory\CacheFactory', 'create']

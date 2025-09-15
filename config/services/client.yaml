@@ -1,0 +1,6 @@
+services:
+    App\Client\BinPackingClient:
+        arguments:
+            - '@App\Client\BinPackingGuzzleHttpClient'
+            - '%binpacking.username%'
+            - '%binpacking.api_key%'

@@ -1,19 +1,37 @@
 <?php
 
-use Doctrine\DBAL\DriverManager;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
-use Doctrine\ORM\ORMSetup;
+declare(strict_types=1);
+
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Dotenv\Dotenv;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$config = ORMSetup::createAttributeMetadataConfiguration([__DIR__], true);
-$config->setNamingStrategy(new UnderscoreNamingStrategy());
+// loads .env configuration
+$dotenv = new Dotenv();
+$dotenv->loadEnv(__DIR__ . '/../.env');
 
-return new EntityManager(DriverManager::getConnection([
-    'driver' => 'pdo_mysql',
-    'host' => 'shipmonk-packing-mysql',
-    'user' => 'root',
-    'password' => 'secret',
-    'dbname' => 'packing',
-]), $config);
+// create DI container
+$container = new ContainerBuilder();
+
+// load services.yaml for DI
+$loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../config'));
+$loader->load('services.yaml');
+
+// set db configuration from .env
+$container->setParameter('db.driver', (string) $_ENV['DB_DRIVER']);
+$container->setParameter('db.user', (string) $_ENV['DB_USER']);
+$container->setParameter('db.password', (string) $_ENV['DB_PASSWORD']);
+$container->setParameter('db.name', (string) $_ENV['DB_NAME']);
+$container->setParameter('db.host', (string) $_ENV['DB_HOST']);
+
+// set bin packing API configuration from .env
+$container->setParameter('binpacking.url', (string) $_ENV['BINPACKING_URL']);
+$container->setParameter('binpacking.username', (string) $_ENV['BINPACKING_USERNAME']);
+$container->setParameter('binpacking.api_key', (string) $_ENV['BINPACKING_API_KEY']);
+
+$container->compile();
+
+return $container;
