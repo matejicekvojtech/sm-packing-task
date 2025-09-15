@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+imports:
+    - { resource: services/application.yaml }
+    - { resource: services/client.yaml }
+    - { resource: services/factory.yaml }
+    - { resource: services/provider.yaml }
+    - { resource: services/registry.yaml }
+    - { resource: services/service.yaml }

@@ -1,0 +1,4 @@
+services:
+    App\Application:
+        autowire: true
+        public: true

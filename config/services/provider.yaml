@@ -1,0 +1,22 @@
+services:
+    App\Provider\MinimalPackagingProviderInterface:
+        alias: App\Provider\CompositeMinimalPackagingProvider
+
+    App\Provider\CompositeMinimalPackagingProvider:
+        arguments:
+            - '@App\Registry\MinimalPackagingProviderRegistry'
+
+    App\Provider\DatabaseMinimalPackagingProvider:
+        autowire: true
+        tags:
+            - { name: app.provider.minimal_packaging, priority: 30 }
+
+    App\Provider\BinPackingApiMinimalPackagingProvider:
+        autowire: true
+        tags:
+            - { name: app.provider.minimal_packaging, priority: 20 }
+
+    App\Provider\BoxpackerMinimalPackagingProvider:
+        autowire: true
+        tags:
+            - { name: app.provider.minimal_packaging, priority: 10 }
